@@ -6,9 +6,8 @@ function send_data() {
         dataType: "json",
         contentType: "application/json",
         data: {
-            "alert": document.getElementById("alert").value,
-            "coordinates": document.getElementById("coordinates").value,
-            "+1": document.getElementById("+1").value,
+            "id": document.getElementById("id").textContent,
+            "amount": document.getElementById("amount").value,
         },
         success: function (response) {
             console.log(response);

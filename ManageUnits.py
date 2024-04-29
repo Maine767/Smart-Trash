@@ -1,4 +1,4 @@
-from Main import Unit
+from Unit import Unit
 
 class Sensors(Unit):
     def __init__(self, unit_id: int = "Undefined", trash_type: str = "Undefined", number_type: str = int(0)) -> None:

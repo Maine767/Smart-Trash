@@ -57,3 +57,9 @@ class Unit(ABC):
     def get_unit_id(self):
         print(f"Вы находитесь в юните {self.__unit_id}")
         return self.__unit_id
+    
+    def get_object(self, id):
+        return self._objects[id]
+    
+    def get_object(self):
+        return self._objects
