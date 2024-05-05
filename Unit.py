@@ -1,9 +1,8 @@
 import ssl
 import certifi
 import geopy.geocoders
-from abc import ABC, abstractmethod
-from geopy.distance import great_circle
 from geopy.geocoders import Nominatim
+from abc import ABC, abstractmethod
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 geopy.geocoders.options.default_ssl_context = ctx
@@ -46,20 +45,15 @@ class Unit(ABC):
         id = len(self._objects) + 1
         self._objects[id] = [False, "None", 0, None, None, 0]
 
-        print(f'Вы создали {id} сенсор')
-
     def set_address(self, id, coordinates):
         location = address_of_sensor(coordinates).get_location()
         self._objects[id][2] = location
 
-        print(f'Вы задали локацию: {location}')
-
     def get_unit_id(self):
-        print(f"Вы находитесь в юните {self.__unit_id}")
         return self.__unit_id
     
     def get_object(self, id):
         return self._objects[id]
     
-    def get_object(self):
+    def get_objects(self):
         return self._objects

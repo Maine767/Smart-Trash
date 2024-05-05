@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, json
 from ManageUnits import MainControlUnit
+import pandas as pd
 
 app = Flask(__name__, template_folder='template', static_folder="static")
 
@@ -50,17 +51,30 @@ def connect():
 
 @app.route('/choose')
 def choose():
-
     ids = list()
-
-    for i in len(Panel.get_objects()):
+    for i in range(len(Panel.get_objects())):
         ids.append(i+1)
+    return render_template('choose.html', ids=ids)
 
-    return render_template('', ids=ids)
+@app.route('/create_new_sensor/settings')
+def set_setting(id):
+    pass
 
-@app.route('/check_statistic')
-def statistic():
-    return render_template('')
+@app.route('/create_new_sensor')
+def create_new_sensor():
+    pass
+    # return render_template('create.html')
+
+# @app.route('/check_statistic')
+# def statistic():
+#     pass
+#     #return render_template('')
+
+@app.route('/profile')
+def profile():
+    # sensors = pd.DataFrame(Panel.get_objects())
+    return render_template('Profile.html', id_panel=Panel.get_unit_id(), sensors="In work", active_sensors="In work", mean_fill="In work")
+
 
 @app.route('/<int:id>')
 def interface(id):
