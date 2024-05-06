@@ -1,89 +1,71 @@
 from flask import Flask, request, render_template, json
-from ManageUnits import MainControlUnit
 import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from threading import Timer
+from sklearn.linear_model import LinearRegression
+from PIL import Image, ImageDraw
+from route import app_route
+from ettities import _logger, Panel
 
 app = Flask(__name__, template_folder='template', static_folder="static")
 
-Panel = MainControlUnit(1, "Бутылки")
-Panel.add_new_sensor()
-Panel.add_new_sensor()
-Panel.add_new_sensor()
+def log_fillment():
+    _logger.insert_data(Panel.get_objects())
 
-Panel.change_status(1, True)
-Panel.change_status(2, True)
-Panel.change_status(3, True)
+    Timer(30, log_fillment).start()
 
-Panel.set_max(1, 50)
-Panel.set_max(2, 510)
-Panel.set_max(3, 150)
+log_fillment()
 
-Panel.set_address(1, "59.9311, 30.3609")
-Panel.set_address(2, "59.9311, 30.3609")
-Panel.set_address(3, "59.9311, 30.3609")
-
-Panel.set_trash(1, 5)
-Panel.set_trash(2, 15)
-Panel.set_trash(3, 52)
-Panel.set_trash(3, 52)
-
-Panel.get_unit_id()
-
-Panel2 = MainControlUnit(2, "Бумага")
-
-Panel2.set_number_type(2.2)
-
-Panel2.add_new_sensor()
-Panel2.add_new_sensor()
-Panel2.add_new_sensor()
-
-Panel2.change_status(1, True)
-Panel2.change_status(2, True)
-Panel2.change_status(3, True)
-
-Panel2.get_unit_id()
+app.register_blueprint(app_route)
 
 @app.route('/connect')
 def connect():
 
-    Panel.set_trash(int(request.args.get('id', '')),int(request.args.get("amount","")))
+    cursor = _logger.read_data('fillment')
+    time = []
+    avg_fill = []
 
-    return json.dumps({'Проблема': request.args.get('alert', ''), 'Координаты': request.args.get("coordinates", ''), 'Кол-во бутылок': request.args.get("+1", '')})
+    counter = 0
+    for item in cursor:
+        time.append(item['timestamp'])
+        counter = 0
+        f = []
+        for i in item:
+            if counter >= 2:
+                f.append(item[i]["fillment"])
+            counter += 1
 
-@app.route('/choose')
-def choose():
-    ids = list()
-    for i in range(len(Panel.get_objects())):
-        ids.append(i+1)
-    return render_template('choose.html', ids=ids)
+        avg_fill.append(np.average(f))
 
-@app.route('/create_new_sensor/settings')
-def set_setting(id):
-    pass
+    x = np.arange(0, len(time)).reshape((-1, 1))
+    y = np.array(avg_fill)
 
-@app.route('/create_new_sensor')
-def create_new_sensor():
-    pass
-    # return render_template('create.html')
+    plt.plot(x, y)
+    plt.xticks(rotation=90)
+    plt.ylim(0, 1)
+    plt.savefig("source.png")
 
-# @app.route('/check_statistic')
-# def statistic():
-#     pass
-#     #return render_template('')
+    model = LinearRegression().fit(x, y)
+    x = np.arange(len(time), len(time) * 2).reshape((-1, 1))
+    y_pred = model.predict(x)
+    plt.plot(x, y_pred)
+    plt.xticks(rotation=90)
+    plt.savefig("predict.png")
 
-@app.route('/profile')
-def profile():
-    # sensors = pd.DataFrame(Panel.get_objects())
-    return render_template('Profile.html', id_panel=Panel.get_unit_id(), sensors="In work", active_sensors="In work", mean_fill="In work")
+    try:
+        id = int(request.args.get('id', ''))
+        amount = int(request.args.get("amount",""))
+        Panel.set_trash(id, amount)
+    except ValueError:
+        print("Value/Values are incorrect")
 
+    _logger.insert_data(Panel.get_objects())
 
-@app.route('/<int:id>')
-def interface(id):
-    sensor = Panel.get_object(id)
-    return render_template('sensor_emulator.html', id=id, percentage=round(sensor[3] * 100, 2), address=sensor[2], status=sensor[0], am_of=sensor[5])
+    return json.dumps({'Проблема': request.args.get('id', ''), 'Координаты': request.args.get("coordinates", ''), 'Кол-во бутылок': request.args.get("amount", '')})
 
-@app.route('/')
-def Hello_page():
-    return render_template('hello_page.html')
 
 if __name__ == '__main__':
     app.run()

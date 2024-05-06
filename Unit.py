@@ -43,7 +43,7 @@ class Unit(ABC):
 
     def add_new_sensor(self):
         id = len(self._objects) + 1
-        self._objects[id] = [False, "None", 0, None, None, 0]
+        self._objects[id] = [False, self._trash_type, None, 0, None, 0]
 
     def set_address(self, id, coordinates):
         location = address_of_sensor(coordinates).get_location()

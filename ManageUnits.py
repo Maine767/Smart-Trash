@@ -53,5 +53,5 @@ class MainControlUnit(Sensors):
         print(f'Статус изменён на {status}')
 
     def check_fill_status(self, id) -> None:
-        if self.sensors[id][3] >= 0.8:
-            return "Мусорка заполнена на 80% или более. Необходимо опустошить."
+        return self._objects[id][3]
+        
