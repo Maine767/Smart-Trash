@@ -3,6 +3,7 @@ import certifi
 import geopy.geocoders
 from geopy.geocoders import Nominatim
 from abc import ABC, abstractmethod
+import sys
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 geopy.geocoders.options.default_ssl_context = ctx
@@ -28,6 +29,8 @@ class Unit(ABC):
         self.__unit_id = unit_id
         self._trash_type = trash_type
         self._objects = dict()
+        self.os = sys.platform
+        self.path = sys.path[0]
 
     @abstractmethod
     def set_number_type(self, number_type):

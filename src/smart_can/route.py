@@ -1,12 +1,27 @@
-from flask import render_template
-import numpy as np
-import logger
-from sklearn.linear_model import LinearRegression
-from PIL import Image, ImageDraw
+from flask import render_template, request, json
+from PIL import Image
 from flask import Blueprint
-from ettities import _logger, Panel
+from tests import _logger, Panel
 
 app_route = Blueprint('route', __name__)
+
+
+@app_route.route('/connect')
+def connect():
+
+    print(Panel.new_charts(_logger))
+
+    try:
+        id = int(request.args.get('id', ''))
+        amount = int(request.args.get("amount",""))
+        Panel.set_trash(id, amount)
+    except ValueError:
+        print("Value/Values are incorrect")
+
+    _logger.insert_data(Panel.get_objects())
+
+    return json.dumps({'Проблема': request.args.get('id', ''), 'Координаты': request.args.get("coordinates", ''), 'Кол-во бутылок': request.args.get("amount", '')})
+
 
 @app_route.route('/choose')
 def choose():
@@ -29,20 +44,18 @@ def create_new_sensor():
 
 @app_route.route('/check_statistic')
 def statistic():
-    cursor = _logger.read_data('fillment')
-    print(cursor)
-    time = []
-    avg_fill = []
-    last = cursor[len(cursor)][len(len(cursor))]
-    print(last)
-
-    avg_fill.append(np.average(last))
-    return render_template('stats.html', image_path="", image_path_2="", AVG=avg_fill)
+    # cursor = _logger.read_data('fillment')
+    # print(cursor)
+    # time = []
+    # avg_fill = []
+    # last = cursor[len(cursor)][len(len(cursor))]
+    # print(last)
+    # avg_fill.append(np.average(last))
+    return render_template('stats.html', AVG="avg_fill")
 
 
 @app_route.route('/profile')
 def profile():
-    # sensors = pd.DataFrame(Panel.get_objects())
     return render_template('Profile.html', id_panel=Panel.get_unit_id(), sensors="In work", active_sensors="In work", mean_fill="In work")
 
 

@@ -1,5 +1,8 @@
-from logger import Logger
+import sys
+import os
+sys.path.insert(1, os.path.join(sys.path[0], "../smart_can"))
 from ManageUnits import MainControlUnit
+from logger import Logger
 
 _logger = Logger('Log')
 
