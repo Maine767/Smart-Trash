@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Choose</title>
+    <title>Selection_panel</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
     <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
-    <script src="../static/script.js"></script>
+    <script src="/static/script.js"></script>
 </head>
 <body>
-    <h1>Choose ID of Sensor<br></h1>
+    <h1>Меню выбора сенсора<br></h1>
 
     <form id="myForm" action="http://127.0.0.1:5000/" method="post">
-        <label for="sensor_id">Select Sensor ID:</label>
+        <label for="sensor_id">Выберите ID нужного сенсора:</label>
         <select name="sensor_id" id="sensor_id">
             {% for id in ids %}
                 <option value="{{ id }}">{{ id }}</option>
@@ -20,6 +20,6 @@
         <input type="submit" value="Submit">
     </form>
 
-    <a href="http://127.0.0.1:5000">start_page</a>
+    <a href="http://127.0.0.1:5000">начальная страница</a>
 </body>
 </html>

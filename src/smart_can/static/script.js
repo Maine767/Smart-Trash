@@ -1,4 +1,3 @@
-
 function send_data() {
     $.ajax({
         type: "GET",
@@ -6,7 +5,7 @@ function send_data() {
         dataType: "json",
         contentType: "application/json",
         data: {
-            "id": document.getElementById("id").textContent,
+            "sensor_id": document.getElementById("sensor_id").textContent,
             "amount": document.getElementById("amount").value,
         },
         
@@ -15,7 +14,7 @@ function send_data() {
             $('#status').text(response.status);
             $('#address').text(response.address);
             $('#percentage').text(response.percentage);
-            $('#am_of').text(response.am_of);
+            $('#amount_of').text(response.amount_of);
             console.log(response);
         }
     });
@@ -25,8 +24,8 @@ function send_data() {
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("myForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        var selected_id = document.getElementById("sensor_id").value;
+        var sensor_id = document.getElementById("sensor_id").value;
 
-        window.location.href = "http://127.0.0.1:5000/" + selected_id;
+        window.location.href = "http://127.0.0.1:5000/settings/sensor/" + sensor_id;
     });
 });

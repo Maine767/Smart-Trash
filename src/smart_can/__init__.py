@@ -4,6 +4,8 @@ import geopy.geocoders
 from geopy.geocoders import Nominatim
 from abc import ABC, abstractmethod
 import sys
+from itertools import islice
+from bson.objectid import ObjectId
 
 ctx = ssl.create_default_context(cafile=certifi.where())
 geopy.geocoders.options.default_ssl_context = ctx
@@ -46,7 +48,17 @@ class Unit(ABC):
 
     def add_new_sensor(self):
         id = len(self._objects) + 1
-        self._objects[id] = [False, self._trash_type, None, 0, None, 0]
+        self._objects[id] = [False, self._trash_type, None, 0, 0, 0]
+        return id
+    
+    def load_sensors(self, sensors):
+
+        for sensor in sensors:
+            self._objects[sensor["_id"]] = [sensor[info] for info in islice(sensor, 1, None)]
+            coordinates = [sensor["COORDINATES"][navigation] for navigation in sensor["COORDINATES"]]
+            self.set_address(sensor["_id"], coordinates)
+
+        return self._objects
 
     def set_address(self, id, coordinates):
         location = address_of_sensor(coordinates).get_location()
@@ -56,7 +68,7 @@ class Unit(ABC):
         return self.__unit_id
     
     def get_object(self, id):
-        return self._objects[id]
+        return self._objects[ObjectId(id)]
     
     def get_objects(self):
         return self._objects

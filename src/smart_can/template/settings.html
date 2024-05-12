@@ -2,25 +2,25 @@
 <html lang="en">
 <head>
 
-    <meta charset="UTF=8">
-    <title>Sensor Emulator</title>
+    <meta charset="UTF-8">
+    <title>Settings</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
     <script src="http://code.jquery.com/jquery-3.3.1.js"></script>
-    <script src="../static/script.js"></script>
+    <script src="/static/script.js"></script>
 
 </head>
 <body>
 
 <h1>Menu of Sensor<br>
 ID of sensor 
-<p id = "id" class = "id">{{id}}</p></h1>
+<p id = "sensor_id" class = "sensor_id">{{sensor_id}}</p></h1>
 <h2>
     Статус: {{status}}<br>
 </h2>
 
 <h3>Адрес: {{address}}<br>
 Заполненность = {{percentage}}%<br>
-Кол-во объектов/кг = {{am_of}}</h3>
+Кол-во объектов/кг = {{amount_of}}</h3>
 
 <div id="monitoring_data">
     <input type="text" id="amount" placeholder="Добавилось:">
@@ -28,7 +28,7 @@ ID of sensor
 </div>
 
 <a href="http://127.0.0.1:5000">start_page</a>
-<a href="http://127.0.0.1:5000/choose">choose_sensor</a>
+<a href="http://127.0.0.1:5000//selection_panel">choose_sensor</a>
 
 </body>
 </html>

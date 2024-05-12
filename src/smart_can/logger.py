@@ -1,5 +1,7 @@
 import pymongo
 from datetime import datetime
+import numpy as np
+from itertools import islice
 
 class Logger:
     def __init__(self, db_name):
@@ -18,5 +20,35 @@ class Logger:
     def read_data(self, collection, value={}, field={}):
         return self.db[collection].find(value, field)
     
-    def last_added_element(self, collection, field):
-        self.db[collection].find().sort({field: -1}).limit(1)
+    def get_mean_fill(self):
+        last_object = self.db["fillment"].find().sort({"_id": -1})[0]
+        sensors_fillment = []
+        sensors = dict(islice(last_object.items(), 2, len(last_object)))
+
+        for i in sensors:
+            sensors_fillment.append(sensors[i]["fillment"])
+
+        avg_fill = np.average(sensors_fillment)
+
+        return avg_fill
+
+    def get_last_added_object(self, collection):
+        return self.db[collection].find().sort({"_id": -1})[0]
+
+    def get_all_sensors(self):
+        db_sensors = self.db["sensors"].find()
+        sensors = []
+        for sensor in db_sensors:
+            sensors.append(sensor)
+        return sensors
+
+    def add_new_sensor(self):
+        self.db["sensors"].find()
+        pass
+
+    def change_sensors_data(self, id: int, status: bool, trash_type: str, place: str, per_fillment: int, max_fillment: int ,fillment: int):
+        print(self.db["sensors"].find({"STATUS": "TRUE"}))
+        for i in self.db["sensors"].find({"STATUS": "TRUE"}):
+            print("h")
+            print(i)
+        pass
