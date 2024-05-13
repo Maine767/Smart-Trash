@@ -2,6 +2,7 @@ import pymongo
 from datetime import datetime
 import numpy as np
 from itertools import islice
+from pymongo import cursor
 
 class Logger:
     def __init__(self, db_name):
@@ -9,7 +10,7 @@ class Logger:
         self.client = pymongo.MongoClient('mongodb://localhost:27017/')
         self.db = self.client[db_name]
 
-    def insert_data(self, sensors):
+    def insert_data(self, sensors) -> None:
         result = {'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
 
         for id in sensors:
@@ -17,10 +18,10 @@ class Logger:
         
         return self.db["fillment"].insert_one(result)
 
-    def read_data(self, collection, value={}, field={}):
+    def read_data(self, collection, value={}, field={}) -> cursor:
         return self.db[collection].find(value, field)
     
-    def get_mean_fill(self):
+    def get_mean_fill(self) -> float:
         last_object = self.db["fillment"].find().sort({"_id": -1})[0]
         sensors_fillment = []
         sensors = dict(islice(last_object.items(), 2, len(last_object)))
@@ -32,23 +33,21 @@ class Logger:
 
         return avg_fill
 
-    def get_last_added_object(self, collection):
+    def get_last_added_object(self, collection) -> cursor:
         return self.db[collection].find().sort({"_id": -1})[0]
 
-    def get_all_sensors(self):
+    def get_all_sensors(self) -> list:
         db_sensors = self.db["sensors"].find()
         sensors = []
         for sensor in db_sensors:
             sensors.append(sensor)
         return sensors
 
-    def add_new_sensor(self):
+    def add_new_sensor(self) -> None:
         self.db["sensors"].find()
         pass
 
-    def change_sensors_data(self, id: int, status: bool, trash_type: str, place: str, per_fillment: int, max_fillment: int ,fillment: int):
-        print(self.db["sensors"].find({"STATUS": "TRUE"}))
-        for i in self.db["sensors"].find({"STATUS": "TRUE"}):
-            print("h")
-            print(i)
-        pass
+    def change_sensors_data(self, id: dict, args: dict) -> None:
+
+        self.db["sensors"].update_one(id, args)
+        print("Updated")

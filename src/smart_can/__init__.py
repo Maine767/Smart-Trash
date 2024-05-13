@@ -45,15 +45,10 @@ class Unit(ABC):
     @abstractmethod
     def set_trash(self):
         None
-
-    def add_new_sensor(self):
-        id = len(self._objects) + 1
-        self._objects[id] = [False, self._trash_type, None, 0, 0, 0]
-        return id
     
-    def load_sensors(self, sensors):
+    def load_sensors(self, cursor):
 
-        for sensor in sensors:
+        for sensor in cursor:
             self._objects[sensor["_id"]] = [sensor[info] for info in islice(sensor, 1, None)]
             coordinates = [sensor["COORDINATES"][navigation] for navigation in sensor["COORDINATES"]]
             self.set_address(sensor["_id"], coordinates)

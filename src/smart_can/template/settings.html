@@ -11,19 +11,18 @@
 </head>
 <body>
 
-<h1>Menu of Sensor<br>
+<h2>Menu of Sensor<br>
+<br>
 ID of sensor 
-<p id = "sensor_id" class = "sensor_id">{{sensor_id}}</p></h1>
-<h2>
-    Статус: {{status}}<br>
-</h2>
+<p id = "sensor_id" class = "sensor_id" style="display: inline;"> {{sensor_id}}</p>
+Статус: <p style="display: inline;" id = "status" class = "status">{{status}}</p><br></h2>
 
-<h3>Адрес: {{address}}<br>
-Заполненность = {{percentage}}%<br>
-Кол-во объектов/кг = {{amount_of}}</h3>
+<h3>Адрес: <p style="display: inline;" id = "address" class = "status">{{address}}</p><br>
+Заполненность = <p style="display: inline;" id = "percentage" class = "percentage">{{percentage}}%</p><br>
+Кол-во объектов/кг = <p style="display: inline;" id = "amount" class = "amount">{{amount}}</p></h3>
 
 <div id="monitoring_data">
-    <input type="text" id="amount" placeholder="Добавилось:">
+    <input type="text" id="add" placeholder="Добавилось:">
     <button onclick="send_data()">Отправить</button>
 </div>
 

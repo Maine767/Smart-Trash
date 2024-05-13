@@ -6,7 +6,11 @@ function send_data() {
         contentType: "application/json",
         data: {
             "sensor_id": document.getElementById("sensor_id").textContent,
-            "amount": document.getElementById("amount").value,
+            "add": document.getElementById("add").value,
+            "status": document.getElementById("status").textContent,
+            "address": document.getElementById("address").textContent,
+            "amount": document.getElementById("amount").textContent,
+
         },
         
         success: function (response) {
@@ -14,7 +18,7 @@ function send_data() {
             $('#status').text(response.status);
             $('#address').text(response.address);
             $('#percentage').text(response.percentage);
-            $('#amount_of').text(response.amount_of);
+            $('#amount').text(response.amount);
             console.log(response);
         }
     });

@@ -5,7 +5,7 @@ from ManageUnits import MainControlUnit
 from logger import Logger
 
 _logger = Logger('Log')
-Panel = MainControlUnit(1, "Бутылки")
+Panel = MainControlUnit(1, "bottles")
 
 sensors = _logger.get_all_sensors()
 
