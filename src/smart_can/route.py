@@ -10,8 +10,6 @@ def connect():
 
     print(Panel.new_charts(_logger))
 
-    # Change in fillment data
-
     new_data = list()
 
     try:
@@ -48,8 +46,6 @@ def connect():
         print("Value/Values are incorrect")
 
 
-    # _logger.insert_data(Panel.get_objects())
-
     # Change in sensors data
 
 
@@ -57,6 +53,13 @@ def connect():
     cursor = _logger.get_all_sensors()
     Panel.load_sensors(cursor)
     
+
+    # Change in fillment data
+
+
+    _logger.insert_data(Panel.get_objects())
+
+
     return json.dumps({'id': request.args.get('sensor_id', ''),"percentage": request.args.get("percentage", ""),"address": request.args.get("address", ""), 'status': request.args.get('status', ''), 'Кол-во бутылок': request.args.get("amount", '')})
 
 
@@ -77,9 +80,10 @@ def set_setting(sensor_id):
 
 @app_route.route('/create_new_sensor')
 def create_new_sensor():
-    sensor_id = _logger.add_new_sensor()
-    sensor = Panel.get_object(sensor_id)
-    return render_template('settings.html', id=sensor_id, percentage=0, address=sensor[2], status=sensor[0], am_of=sensor[5])
+    sensor = _logger.add_new_sensor(Panel._trash_type)
+    sensor_id = sensor['_id']
+    Panel.load_sensors(_logger.get_all_sensors())
+    return render_template('settings.html', sensor_id=sensor_id, percentage=0, address="None", status="FALSE", amount=0)
 
 @app_route.route('/profile')
 def profile():

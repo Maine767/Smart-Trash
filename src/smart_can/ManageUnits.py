@@ -6,7 +6,7 @@ from sklearn.linear_model import LinearRegression
 class Sensors(Unit):
     def __init__(self, unit_id: int = "Undefined", trash_type: str = "Undefined", number_type: str = int(0)) -> None:
         super().__init__(unit_id, trash_type)
-        self.__number_type = type(number_type)
+        self.__number_type = None
 
     def check_fill_percentage(self, id, step):
         cur_am_of_trash = self._objects[id][5]
@@ -43,8 +43,13 @@ class Sensors(Unit):
         
         print(f"Вы задали ограничение равное = {amount}")
 
-    def set_number_type(self, number_type):
-        self.__number_type = type(number_type)
+    @property
+    def number_type(self):
+        self.__number_type = type(self.number_type)
+    
+    @number_type.setter
+    def number_type(self, value):
+        self.__number_type = type(value)
         
 
 class MainControlUnit(Sensors):

@@ -33,7 +33,7 @@ class Logger:
 
         return avg_fill
 
-    def get_last_added_object(self, collection) -> cursor:
+    def get_last_added_object(self, collection) -> list:
         return self.db[collection].find().sort({"_id": -1})[0]
 
     def get_all_sensors(self) -> list:
@@ -43,11 +43,10 @@ class Logger:
             sensors.append(sensor)
         return sensors
 
-    def add_new_sensor(self) -> None:
-        self.db["sensors"].find()
-        pass
+    def add_new_sensor(self, trash_type):
+        template = {"STATUS": "FALSE", "TRASH_TYPE": trash_type, "COORDINATES": {"longitude": 59.9311 ,"latitude": 30.3609}, "PERCENTAGE": 0, "MAX": 100, "AMOUNT": 0}
+        self.db["sensors"].insert_one(template)
+        return self.get_last_added_object("sensors")
 
     def change_sensors_data(self, id: dict, args: dict) -> None:
-
         self.db["sensors"].update_one(id, args)
-        print("Updated")

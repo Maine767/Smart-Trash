@@ -35,7 +35,7 @@ class Unit(ABC):
         self.path = sys.path[0]
 
     @abstractmethod
-    def set_number_type(self, number_type):
+    def number_type(self):
         None
 
     @abstractmethod
@@ -47,12 +47,10 @@ class Unit(ABC):
         None
     
     def load_sensors(self, cursor):
-
         for sensor in cursor:
             self._objects[sensor["_id"]] = [sensor[info] for info in islice(sensor, 1, None)]
             coordinates = [sensor["COORDINATES"][navigation] for navigation in sensor["COORDINATES"]]
             self.set_address(sensor["_id"], coordinates)
-
         return self._objects
 
     def set_address(self, id, coordinates):
