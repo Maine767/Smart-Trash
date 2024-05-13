@@ -8,7 +8,7 @@ app_route = Blueprint('route', __name__)
 @app_route.route('/connect')
 def connect():
 
-    print(Panel.new_charts(_logger))
+    print(Panel.new_chart(_logger))
 
     new_data = list()
 

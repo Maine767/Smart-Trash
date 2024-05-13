@@ -78,9 +78,6 @@ class MainControlUnit(Sensors):
                     counter += 1
 
                 avg_fill.append(np.average(f))
-            print('IT"SOKEY')
-            print(time)
-            print(avg_fill)
             return time, avg_fill
 
         except Exception:
@@ -117,8 +114,6 @@ class MainControlUnit(Sensors):
         try:
             time, avg_fill = self.average_fill(_logger)
 
-            print("IT'S PREDICTION")
-
             y = np.array(avg_fill)
             y = np.nan_to_num(y)
 
@@ -133,7 +128,7 @@ class MainControlUnit(Sensors):
             plt.plot(x, y_pred)
             plt.xticks(rotation=90)
             plt.savefig(path + "/predict.png", bbox_inches='tight')
-            return "Графики построенны"
+            print("Графики построенны")
     
         except Exception:
             return f'Графики не удалось построить по причине: {Exception}'

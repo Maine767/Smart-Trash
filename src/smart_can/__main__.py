@@ -12,7 +12,7 @@ six_hours = 60 * 60 * 6
 
 def log_fillment():
     _logger.insert_data(Panel.get_objects())
-    print(Panel.new_charts(_logger))
+    print(Panel.new_chart(_logger))
     Timer(six_hours, log_fillment).start()
 
 log_fillment()
