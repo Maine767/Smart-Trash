@@ -63,17 +63,11 @@ class MainControlUnit(Sensors):
     def check_fill_status(self, id) -> None:
         return self._objects[id][3]
         
-    def new_charts(self, _logger):
+    def average_fill(self, _logger):
         try:
             cursor = _logger.read_data('fillment')
             time = []
             avg_fill = []
-
-            if self.os == 'win32' or self.os == 'cygwin':
-                path = self.path + "\static\images"
-            else:
-                path = self.path + "/static/images"
-
             for item in cursor:
                 time.append(item['timestamp'])
                 counter = 0
@@ -84,14 +78,54 @@ class MainControlUnit(Sensors):
                     counter += 1
 
                 avg_fill.append(np.average(f))
+            print('IT"SOKEY')
+            print(time)
+            print(avg_fill)
+            return time, avg_fill
+
+        except Exception:
+            
+            raise f'np error'
+    
+    def new_chart(self, _logger):
+        try:
+            time, avg_fill = self.average_fill(_logger)
+
+            if self.os == 'win32' or self.os == 'cygwin':
+                path = self.path + "\static\images"
+            else:
+                path = self.path + "/static/images"
+
 
             x = np.arange(0, len(time)).reshape((-1, 1))
             y = np.array(avg_fill)
+            y = np.nan_to_num(y)
             
+
             plt.plot(x, y)
             plt.xticks(rotation=90)
             plt.ylim(0, 1)
             plt.savefig(path + "/source.png", bbox_inches='tight')
+
+            print("Графики построенны")
+        
+        except Exception:
+            
+            return f'Графики не удалось построить по причине: {Exception}'
+
+    def new_prediction(self, _logger):
+        try:
+            time, avg_fill = self.average_fill(_logger)
+
+            print("IT'S PREDICTION")
+
+            y = np.array(avg_fill)
+            y = np.nan_to_num(y)
+
+            if self.os == 'win32' or self.os == 'cygwin':
+                path = self.path + "\static\images"
+            else:
+                path = self.path + "/static/images"
 
             model = LinearRegression().fit(x, y)
             x = np.arange(len(time), len(time) * 2).reshape((-1, 1))
@@ -99,9 +133,7 @@ class MainControlUnit(Sensors):
             plt.plot(x, y_pred)
             plt.xticks(rotation=90)
             plt.savefig(path + "/predict.png", bbox_inches='tight')
-
             return "Графики построенны"
-        
+    
         except Exception:
-
             return f'Графики не удалось построить по причине: {Exception}'
