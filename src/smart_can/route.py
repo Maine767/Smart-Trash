@@ -41,6 +41,8 @@ def connect():
             counter += 1
 
         print(sensor)
+        if new_data[4] > 0.8:
+                _logger.send_email("nikita.valko1@gmail.com", "mainetspv@gmail.com", "Sensor_Smart_can", f"Мусорка {new_data[0]} - переполнена", "kqoh ropf rwlb swiz")
 
     except ValueError:
         print("Value/Values are incorrect")
@@ -75,7 +77,8 @@ def choose():
 def set_setting(sensor_id):
     sensor = Panel.get_object(sensor_id)
     persent = round(sensor[3] * 100 ) if sensor[3] > 0 else 0
-    return render_template("settings.html", sensor_id=sensor_id, percentage=persent, address=sensor[2], status=sensor[0], amount=sensor[5])
+    return render_template("settings.html", sensor_id=sensor_id, percentage=persent, address=sensor[2],
+                            status=sensor[0], amount=sensor[5])
 
 
 @app_route.route('/create_new_sensor')

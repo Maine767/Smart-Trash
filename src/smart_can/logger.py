@@ -3,6 +3,9 @@ from datetime import datetime
 import numpy as np
 from itertools import islice
 from pymongo import cursor
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 class Logger:
     def __init__(self, db_name):
@@ -50,3 +53,29 @@ class Logger:
 
     def change_sensors_data(self, id: dict, args: dict) -> None:
         self.db["sensors"].update_one(id, args)
+
+    def get_emails():
+        pass
+
+    def send_email(self, from_addr, to_addrs, subject, text, passwd, encode='utf-8'):
+        sender_email = from_addr
+        sender_password = passwd
+        recipient_email = to_addrs
+
+        msg = MIMEMultipart()
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+        msg['Subject'] = subject
+        msg.attach(MIMEText(text, 'plain'))
+
+        try:
+            server = smtplib.SMTP('smtp.gmail.com', 587)
+            server.starttls()
+            server.login(sender_email, sender_password)
+            
+            server.sendmail(sender_email, recipient_email, msg.as_string())
+            print("Email sent successfully")
+        except Exception as e:
+            print(f"Failed to send email: {e}")
+        finally:
+            server.quit()
