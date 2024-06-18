@@ -14,12 +14,12 @@ Regressions: ![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931
 flowchart TB
 src --> smart_can
 smart_can --> static
-static --> .js Files
+static --> .js_Files
 static --> images
-images --> .png Files
+images --> .png_Files
 smart_can --> template
-template --> .html Files
-smart_can --> .py Files
+template --> .html_Files
+smart_can --> .py_Files
 src --> tests
 tests --> tests.py
 ```
